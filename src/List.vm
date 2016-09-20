@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>index</title>
+	<style type="text/css">
+		.container {
+			width:400px;
+			height:800px;
+			margin-right: auto; 
+			margin-left: auto;
+		}
+		.head_top{
+			width:400px;
+			height:50px;
+			background:#666666;
+		}
+		.title_top{
+			height:1px;
+		}
+		.bk_picture{
+			width:400px;
+			height:280px;
+			position:relative; 
+			bottom:43px;	
+		}
+		.bk_picture img{
+			width:400px;
+			height:300px;	
+		}
+		.u_name{
+			position:relative; 
+			left:220px;
+			bottom:73px;
+		}
+		.hp{
+			position:relative; 
+			left:300px;
+			bottom:120px;
+		}
+		.hp img{
+			width:75px;
+			height:73px;
+		}
+		.tx_picture img{
+			width:65px;
+			height:63px;
+		}
+		.middle{
+			position:relative;
+			bottom:70px;
+		}
+		.dynamic{
+			width:310px;
+			height:190px;
+		}
+		.f_name{
+			position:relative; 
+			left:70px;
+			bottom:80px;
+		}
+		.elements{
+			position:relative; 
+			left:80px;
+			bottom:80px;
+		}
+		.elements img{
+			width:85px;
+			height:83px;
+			padding:10px;
+		}
+		.justDo{
+			position:relative; 
+			bottom:10px;
+		}
+		.justDo .pinl{
+			width: 25px;
+			height: 20px;
+			float: right;
+			background-image: url(./static/pictures/pinglun.png);
+		}
+		.justDo .del{
+			width: 25px;
+			height: 20px;
+			float: right;
+			background-image: url(./static/pictures/delete.png);
+		}
+		.fab{
+			position:relative; 
+			right:3px;
+		}
+		#newSay{
+			widows: 40px;
+			height: 35px;
+			position:relative; 
+			left:340px;
+			bottom: 47px;
+		}
+		#openSay{
+			position:relative; 
+			bottom: 110px;
+		}
+		.newOpen{
+			position:relative; 
+			right:-12px;
+			bottom: 30px;
+		}
+
+	</style>
+
+	<script type="text/javascript" src="./static/js/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript">
+	    function initFunctions(){
+	    	
+	    	$(".justDo .del").each(function(){
+				$(this).click(function(){
+					alert("确认删除此动态？");
+					$(this).parent().parent().parent().remove();
+				});
+			});
+			$(".justDo .pinl").each(function(){
+				$(this).click(function(){
+					var msgId = $(this).parent().parent().parent().attr("id");
+					var uId = $(".u_name").children([1]).attr("id");
+					var sayNode = $(this).parent().children([1]);
+					sayNode.css("visibility","visible");						
+					sayNode.children([1]).click(function(){
+						var say = sayNode.children([1]).val();
+						var ss = $.trim(say);
+						if(ss == ''){
+							alert("请输入内容");
+							return false;
+						}
+						sayNode.children([1]).css("visibility","hidden");
+						var just = $(this).parent().parent();
+						
+						$.ajax({
+			             type: "POST",
+			             url: "/addComment",
+			             async: false,
+			             data: {messageId:msgId,userId:uId,comment:ss},
+			             dataType: "json",
+			             success: function(data){
+			             			 if(data.status){
+		            	 			 	alert('评论成功');
+			            	 		 }else{
+			            	 			 alert('评论失败');
+			            	 		 }			                        
+			                      },
+			                      error: function(XMLHttpRequest, textStatus, errorThrown){
+			                    	  alert('ERRaddComment');
+			                      }
+			         	});						
+						just.css("position","relative");
+						just.css("bottom","27px");
+						window.location.reload();
+					});
+
+				});
+			});
+			$("#newSay").click(function(){
+				$("#openSay").css("visibility","visible");				
+			});
+			$(".newOpen").click(function(){
+				    var uId = $(".u_name").children([1]).attr("id");
+					var newsay = $("#sss").val();
+					 $.ajax({
+			             type: "POST",
+			             url: "/addMessage",
+			             async: false,
+			             data: {userId: uId,message:newsay},
+			             dataType: "json",
+			             success: function(data){
+			             			if(data.status){
+		            	 			 	alert('发表成功');
+			                         	cloneNode.attr("id",data.messageId);
+			            	 		 }else{
+			            	 			 alert('发表失败');
+			            	 		 }
+			                         
+			                      },
+			                      error: function(XMLHttpRequest, textStatus, errorThrown){
+			                    	  alert('ERRaddMessage');
+			                      }
+			         });
+					$("#openSay").css("visibility","hidden");
+					window.location.reload();
+				});	
+	    	
+	    }
+	
+		$(function () {
+			initFunctions();
+		});  
+	</script>	
+</head>
+<body>
+<div class="container">	
+	<div class="head">
+		<div class="head_top">
+			<div class="title_top">
+			</div>
+			<div>
+				<p style="color:white;margin-left:20px;font-size:18px;">朋友圈</p>	
+				<img src="./static/pictures/camera.png" id="newSay">		
+			<div>
+		</div>
+		<div class="picture">			
+			<div class="bk_picture">
+				<img src="./static/pictures/xiuqiu.jpg">			
+			</div>
+			<div class="u_name">
+				<p style="color:white;font-weight:bold;font-size:19px;" id="3d714e9466ec46a091f2baa19538d333">sunnvsn</p>
+			</div>
+			<div class="hp">
+				<img src="./static/pictures/ali.jpg">
+			</div>
+		</div>		
+	</div>
+	<div style="visibility:hidden" id="openSay">
+		<textarea id="sss" rows="4" cols="45" name="open" value="发表动态"></textarea>
+		<button class="newOpen">发表</button>
+	</div>
+	
+	<div class="middle" id="middle">
+		#foreach($dynamics in $list)
+			<div class="dynamic" id="${dynamics.messageId}">
+				<div class="tx_picture">
+				<img src="${dynamics.userImage}">			
+				</div>
+				<div class="f_name">
+					<p style="color:#3366CC;font-weight:bold;font-size:15px;">${dynamics.userName}</p>
+				</div>
+				<div class="elements">
+					<p style="color:#000000;font-weight:bold;font-size:15px;">${dynamics.messageContent}</p>
+					<div class="justDo">
+						<div style="visibility:hidden">
+							<input type="text" name="say" value="请输入你的评论">
+							<button class="fab">发表</button>
+						</div>
+						#foreach($comments in $dynamics.commentList)
+			                  	<span style='color:#3366CC;font-size:14px;'><span style='color:#0A0A0A;font-size:16px;'>${comments.commentUser}:</span>${comments.comment}</span><br>
+			            #end
+			            <button class="del"></button>
+						<button class="pinl"></button>
+					</div>
+				</div>	
+			</div>
+		#end
+	</div>
+</div>
+</body>
+</html>
+
+
